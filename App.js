@@ -23,7 +23,8 @@ export default class App extends Component {
         <View style={styles.main}>
           <Text style={styles.title}>EzList</Text>
           <TextInput style={styles.textInput} placeholder='insert your task' 
-                     onChangeText={text => this.setState({taskText: text})} />
+                     onChangeText={text => this.setState({taskText: text})} 
+                     ref={(input) => (this._textInput = input)}/>
         </View>
         <View>
           <TouchableOpacity style={styles.addButton} onPress={this.addItem}>
@@ -59,9 +60,24 @@ export default class App extends Component {
     
     // push to list
     this.taskData.push(taskItem)
+
+    // sort the list
+    this.sortList()
     
-    // return new state
+    // return new state and clear textInput
     this.setState({taskText:''})
+    this._textInput.clear()
+    this._textInput.focus()
+
+
+  }
+
+  // sort the list with the last added on top
+  sortList = () => {
+    //compare id and move the new one to the top
+    this.taskData.sort( (item1,item2)=> {
+      return item2.id - item1.id
+    })
   }
 }
 
