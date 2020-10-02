@@ -10,7 +10,9 @@ export default class App extends Component {
 
   // create state to save the task
   state = {
-    taskText: ''
+    taskText: '',
+    done: false,
+    delete: false
   }
 
   // array to store data 
@@ -35,7 +37,6 @@ export default class App extends Component {
           data={this.taskData}
           renderItem={this.renderList}
           keyExtractor={item => item.id}
-          extraData={this.state.taskText}
         />
         <StatusBar style="auto" />
       </SafeAreaView>
@@ -43,7 +44,14 @@ export default class App extends Component {
   }
 
   renderList = ({item}) => (
-    <Item task_name={item.task_name}/>
+    <Item 
+      task_name={ item.task_name }
+      id={ item.id } 
+      done= { this.doneItem }
+      delete={ this.removeItem }
+      checkDone={ this.state.done }
+      checkDelete={ this.state.delete }
+    />
   )
 
   addItem = () => {
@@ -72,6 +80,26 @@ export default class App extends Component {
 
   }
 
+  removeItem = (itemId) => {
+    this.taskData.forEach( (item,index) => {
+      if (item.id == itemId) {
+        this.listData.splice( index, 1 )
+      }
+    } )
+    this.showToast('item deleted', 2000 )
+    this.saveList()
+    this.setState({expenseAmount:0})
+  }
+
+  doneItem = (itemId) => {
+    this.taskData.forEach( (item) => {
+      if (item.id == itemId) {
+        this.setState({done:true})
+      }
+    } )
+    this.setState({one:false})  
+  }
+
   // sort the list with the last added on top
   sortList = () => {
     //compare id and move the new one to the top
@@ -95,7 +123,8 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 1,
     borderRadius: 5,
-    padding: 5 
+    padding: 5,
+    fontSize:18,
   }, 
   addButton: {
     alignItems: 'center',
