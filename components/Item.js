@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -9,15 +9,17 @@ export const Item = (props) => {
             <Text style={styles.text}>{props.task_name}</Text>  
             <View style={styles.icons}>
                 <TouchableOpacity style={styles.textButton} onPress={ () => {props.done(props.id)} }>
-                    <AntDesign name="checkcircleo" size={24} color={[ props.checkDone ? "green" : "black" ]} />
+                    <AntDesign name="checkcircleo" size={24} color={props.itemDone ? 'green' : 'black'}  />
                 </TouchableOpacity>    
                 <TouchableOpacity style={styles.textButton} onPress={ () => {props.delete(props.id)} }>
-                    <FontAwesome name="trash-o" size={28} color={[ props.checkDelete ? "gray" : "black" ]}   />
+                    <FontAwesome name="trash-o" size={28} color={props.itemDelete ? 'black' : 'gray'}   />
                 </TouchableOpacity>   
                 </View>
         </View>
     )
 }
+
+
 
 const styles = StyleSheet.create({
     main:{

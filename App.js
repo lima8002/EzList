@@ -11,8 +11,7 @@ export default class App extends Component {
   // create state to save the task
   state = {
     taskText: '',
-    done: false,
-    delete: false
+    refresh: false
   }
 
   // array to store data 
@@ -35,8 +34,10 @@ export default class App extends Component {
         </View>
         <FlatList
           data={this.taskData}
+          extraData={this.state.refresh} 
           renderItem={this.renderList}
           keyExtractor={item => item.id}
+          
         />
         <StatusBar style="auto" />
       </SafeAreaView>
@@ -49,8 +50,8 @@ export default class App extends Component {
       id={ item.id } 
       done= { this.doneItem }
       delete={ this.removeItem }
-      checkDone={ this.state.done }
-      checkDelete={ this.state.delete }
+      itemDone={ item.itemDone }
+      itemDelete={ item.itemDelete}
     />
   )
 
@@ -58,12 +59,13 @@ export default class App extends Component {
     if(this.state.taskText == '') {
       return
     }
-    console.log('aqui')
     // create variables to store itemId and listItem
     let itemId = new Date().getTime().toString()
     let taskItem = {
       id: itemId,
       task_name: this.state.taskText,
+      itemDone: false,
+      itemDelete: false
     }
     
     // push to list
@@ -82,22 +84,23 @@ export default class App extends Component {
 
   removeItem = (itemId) => {
     this.taskData.forEach( (item,index) => {
-      if (item.id == itemId) {
-        this.listData.splice( index, 1 )
+      if (item.id == itemId && item.itemDone ) {
+        this.taskData.splice( index, 1 )
       }
     } )
-    this.showToast('item deleted', 2000 )
-    this.saveList()
-    this.setState({expenseAmount:0})
+    this.setState({taskText:''})
   }
 
   doneItem = (itemId) => {
     this.taskData.forEach( (item) => {
       if (item.id == itemId) {
-        this.setState({done:true})
+        item.itemDone = true
+        item.itemDelete = true
+        this.setState({refresh:true})
       }
-    } )
-    this.setState({one:false})  
+    } )    
+    
+    
   }
 
   // sort the list with the last added on top
